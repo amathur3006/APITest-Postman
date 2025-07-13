@@ -1,0 +1,143 @@
+{
+	"info": {
+		"_postman_id": "6f9d2254-cc3f-4b50-86f6-b3eeebd343f5",
+		"name": "APITest Postman",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "18401853",
+		"_collection_link": "https://dark-escape-8696834.postman.co/workspace/99030c00-bb8b-41fc-8283-219edf452fb9/collection/18401853-6f9d2254-cc3f-4b50-86f6-b3eeebd343f5?action=share&source=collection_link&creator=18401853"
+	},
+	"item": [
+		{
+			"name": "Verify id generated on creating new user entry is numerical",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"const randomNumber = Math.random().toString(36).substring(2,5);\r",
+							"pm.environment.set(\"randomName\",`Username_${randomNumber}`);\r",
+							"pm.environment.set(\"randomEmail\",`Username${randomNumber}@gmail.com`);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let response = pm.response.json();\r",
+							"\r",
+							"pm.test(\"ID is numerical\",function(){\r",
+							"   \r",
+							"   pm.expect(response.id).to.be.a('number');\r",
+							"\r",
+							"});\r",
+							"\r",
+							"pm.test(\"status code is 201\", function(){\r",
+							"    pm.response.to.have.status(201);\r",
+							"})\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "d6588d8c51f91e6ce0361179d3d5ea5e8b8c2696317856f92a847185190a4f5f",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\":\"{{randomName}}\",\r\n    \"email\":\"{{randomEmail}}\",\r\n    \"gender\":\"male\",\r\n    \"status\":\"active\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://gorest.co.in/public/v2/users",
+					"protocol": "https",
+					"host": [
+						"gorest",
+						"co",
+						"in"
+					],
+					"path": [
+						"public",
+						"v2",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Verify first user entry status is either active or inactive",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let response = pm.response.json();\r",
+							"\r",
+							"pm.test(\"First entry status is either active or inactive \", function(){\r",
+							"    pm.expect(['active', 'inactive']).to.include(response[0].status);\r",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "d6588d8c51f91e6ce0361179d3d5ea5e8b8c2696317856f92a847185190a4f5f",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\":\"{{randomName}}\",\r\n    \"email\":\"{{randomEmail}}\",\r\n    \"gender\":\"male\",\r\n    \"status\":\"active\"\r\n}"
+				},
+				"url": {
+					"raw": "https://gorest.co.in/public/v2/users",
+					"protocol": "https",
+					"host": [
+						"gorest",
+						"co",
+						"in"
+					],
+					"path": [
+						"public",
+						"v2",
+						"users"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
